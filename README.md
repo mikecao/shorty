@@ -25,7 +25,7 @@ For **Nginx**, add the following to your server declaration:
         }
     }
 
-3\. Edit the `config.php` file.
+4\. Edit the `config.php` file.
 
 ## Generating short URLs
 
@@ -39,7 +39,8 @@ This will return a shortened URL such as:
 
 When a user opens the short URL they will be redirected to the long URL location.
 
-By default, Shorty will generate an HTML response. You can alter the format by passing in a `format` query parameter.
+By default, Shorty will generate an HTML response for all saved URLs.
+You can alter the response format by passing in a `format` query parameter.
 
     http://example.com/?url=http://www.google.com&format=text
 

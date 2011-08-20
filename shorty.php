@@ -1,6 +1,6 @@
 <?php
 /**
- * Shorty: A simple url shortener.
+ * Shorty: A simple URL shortener.
  *
  * @copyright Copyright (c) 2011, Mike Cao <mike@mikecao.com>
  * @license   MIT, http://www.opensource.org/licenses/mit-license.php
@@ -39,7 +39,7 @@ class Shorty {
      * @param string $hostname Hostname
      * @param object $connection Database connection
      */
-    public function __construct($hostname, $connection, $chars = null) {
+    public function __construct($hostname, $connection) {
         $this->hostname = $hostname;
         $this->connection = $connection;
     }
@@ -101,7 +101,7 @@ class Shorty {
     }
 
     /**
-     * Looks up a url in the database by id.
+     * Looks up a URL in the database by id.
      *
      * @param string $id URL id
      * @return array URL record
@@ -131,7 +131,7 @@ class Shorty {
     }
 
     /**
-     * Stores a url in the database.
+     * Stores a URL in the database.
      *
      * @param string $url URL to store
      * @return int Insert id
@@ -178,7 +178,6 @@ class Shorty {
         header('Status: 404 Not Found');
         exit(
             '<h1>404 Not Found</h1>'.
-            '<h3>The page you have requested could not be found.</h3>'.
             str_repeat(' ', 512)
         );
     }
@@ -194,6 +193,8 @@ class Shorty {
 
     /**
      * Adds an IP to allow saving URLs.
+     *
+     * @param string|array $ip IP address or array of IP addresses
      */
     public function allow($ip) {
         if (is_array($ip)) {
@@ -206,21 +207,19 @@ class Shorty {
 
     /**
      * Starts the program.
-     *
-     * @param string $connection Connection string
      */
     public function run() {
         $q = str_replace('/', '', $_GET['q']);
         $url = urldecode($_GET['url']);
         $format = strtolower($_GET['format']);
 
-        // If adding a new url
+        // If adding a new URL
         if (!empty($url)) {
             if (!empty($this->whitelist) && !in_array($_SERVER['REMOTE_ADDR'], $this->whitelist)) {
                 $this->error('Not allowed.');
             }
 
-            if (preg_match('/^http[s]?\:\/\//', $url)) {
+            if (preg_match('/^http[s]?\:\/\/[\w]+/', $url)) {
                 $result = $this->find($url);
 
                 // Not found, so save it
