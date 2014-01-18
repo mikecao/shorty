@@ -60,12 +60,11 @@ class Shorty {
      *
      * @param int $num Number to convert
      * @param string $s String of characters for conversion
+     * @param int $k Number for padding
      * @return string Alpha-numeric string
      */
-    public static function num_to_alpha($n, $s) {
-        // This adds more randomness for consecutive numbers.
-        $n = '1'.strrev($n + 12345);
-
+    public static function num_to_alpha($n, $s, $k = 0) {
+        if ($k > 0) $n = (int)($k.$n);
         $b = strlen($s);
         $m = $n % $b;
 
@@ -83,13 +82,14 @@ class Shorty {
     }
 
     /**
-     * Converts an alpha numberic string to a number.
+     * Converts an alpha numeric string to a number.
      *
      * @param string $a Alpha-numeric string to convert
      * @param string $s String of characters for conversion
+     * @param int $k Number for padding
      * @return int Converted number
      */
-    public static function alpha_to_num($a, $s) {
+    public static function alpha_to_num($a, $s, $k = 0) {
         $b = strlen($s);
         $l = strlen($a);
 
@@ -97,7 +97,7 @@ class Shorty {
             $n += strpos($s, substr($a, $i, 1)) * pow($b, $l - $i - 1);
         }
 
-        return ((int)strrev(substr($n,1))) - 12345;
+        return ($k > 0) ? substr($n, strlen($k)) : $n;
     }
 
     /**
