@@ -60,4 +60,4 @@ certain IP addresses, use the `allow` function:
 
 ## License
 
-Shorty is licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) license.
+Shorty is licensed under the [MIT](https://github.com/mikecao/shorty/blob/master/LICENSE) license.
