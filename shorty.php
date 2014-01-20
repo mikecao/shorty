@@ -14,6 +14,18 @@ class Shorty {
     private $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     /**
+     * Salt for id encoding.
+     *
+     * @var string
+     */
+    private $salt = '';
+
+    /**
+     * Length of random padding.
+     */
+    private $padding = 3;
+
+    /**
      * Hostname
      */
     private $hostname = '';
@@ -50,9 +62,66 @@ class Shorty {
      * @param string $chars Set of characters
      */
     public function set_chars($chars) {
-        if (!empty($chars)) {
-            $this->chars = $chars;
+        if (!is_string($chars) || empty($chars)) {
+            throw new Exception('Invalid input.');
         }
+        $this->chars = $chars;
+    }
+
+    /**
+     * Sets the salt string for encoding.
+     *
+     * @param string $salt Salt string
+     */
+    public function set_salt($salt) {
+        $this->salt = $salt;
+    }
+
+    /**
+     * Converts an id to an encoded string.
+     *
+     * @param int $n Number to encode
+     * @return string Encoded string
+     */
+    public function encode($n) {
+        $k = 0;
+
+        if (!empty($this->salt)) {
+            $k = self::get_salt_num($n, $this->salt, $this->padding);
+            $n = (int)($k.$n);
+        }
+
+        return $this->num_to_alpha($n, $this->chars);
+    }
+
+    /**
+     * Converts an encoded string into a number.
+     *
+     * @param string $s String to decode
+     * @return int Decoded number
+     */
+    public function decode($s) {
+        $n = $this->alpha_to_num($s, $this->chars);
+
+        return (!empty($this->salt)) ? substr($n, $this->padding) : $n;
+    }
+
+    /**
+     * Gets a number for padding based on a salt.
+     *
+     * @param int $n Number to pad
+     * @param string $salt Salt string
+     * @param int $padding Padding length
+     * @return int Number for padding
+     */
+    public static function get_salt_num($n, $salt, $padding) {
+        $hash = md5($n.$salt);
+        $dec = hexdec(substr($hash, 0, $padding));
+        $num = $dec % pow(10, $padding);
+        if ($num == 0) $num = 1;
+        $num = str_pad($num, $padding, '0');
+
+        return $num;
     }
 
     /**
@@ -60,11 +129,9 @@ class Shorty {
      *
      * @param int $num Number to convert
      * @param string $s String of characters for conversion
-     * @param int $k Number for padding
      * @return string Alpha-numeric string
      */
-    public static function num_to_alpha($n, $s, $k = 0) {
-        if ($k > 0) $n = (int)($k.$n);
+    public static function num_to_alpha($n, $s) {
         $b = strlen($s);
         $m = $n % $b;
 
@@ -86,10 +153,9 @@ class Shorty {
      *
      * @param string $a Alpha-numeric string to convert
      * @param string $s String of characters for conversion
-     * @param int $k Number for padding
      * @return int Converted number
      */
-    public static function alpha_to_num($a, $s, $k = 0) {
+    public static function alpha_to_num($a, $s) {
         $b = strlen($s);
         $l = strlen($a);
 
@@ -97,7 +163,7 @@ class Shorty {
             $n += strpos($s, substr($a, $i, 1)) * pow($b, $l - $i - 1);
         }
 
-        return ($k > 0) ? substr($n, strlen($k)) : $n;
+        return $n;
     }
 
     /**
@@ -227,10 +293,10 @@ class Shorty {
 
                     $id = $this->store($url);
 
-                    $url = $this->hostname.'/'.self::num_to_alpha($id, $this->chars);
+                    $url = $this->hostname.'/'.$this->encode($id);
                 }
                 else {
-                    $url = $this->hostname.'/'.self::num_to_alpha($result['id'], $this->chars);
+                    $url = $this->hostname.'/'.$this->decode($result['id']);
                 }
 
                 // Display the shortened url
@@ -262,7 +328,7 @@ class Shorty {
         // Lookup by id
         else {
             if (preg_match('/^([a-zA-Z0-9]+)$/', $q, $matches)) {
-                $id = self::alpha_to_num($matches[1], $this->chars);
+                $id = $this->alpha_to_num($matches[1]);
 
                 $result = $this->fetch($id);
 
