@@ -328,7 +328,7 @@ class Shorty {
         // Lookup by id
         else {
             if (preg_match('/^([a-zA-Z0-9]+)$/', $q, $matches)) {
-                $id = $this->alpha_to_num($matches[1]);
+                $id = $this->decode($matches[1]);
 
                 $result = $this->fetch($id);
 
