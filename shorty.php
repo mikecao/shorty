@@ -21,9 +21,9 @@ class Shorty {
     private $salt = '';
 
     /**
-     * Length of random padding.
+     * Length of number padding.
      */
-    private $padding = 3;
+    private $padding = 1;
 
     /**
      * Hostname
@@ -57,6 +57,15 @@ class Shorty {
     }
 
     /**
+     * Gets the character set for encoding.
+     *
+     * @return string Set of characters
+     */
+    public function get_chars() {
+        return $this->chars;
+    }
+
+    /**
      * Sets the character set for encoding.
      *
      * @param string $chars Set of characters
@@ -69,12 +78,39 @@ class Shorty {
     }
 
     /**
+     * Gets the salt string for encoding.
+     *
+     * @return string Salt
+     */
+    public function get_salt() {
+        return $this->salt;
+    }
+
+    /**
      * Sets the salt string for encoding.
      *
      * @param string $salt Salt string
      */
     public function set_salt($salt) {
         $this->salt = $salt;
+    }
+
+    /**
+     * Gets the padding length.
+     *
+     * @return int Padding length
+     */
+    public function get_padding() {
+        return $this->padding;
+    }
+
+    /**
+     * Sets the padding length.
+     *
+     * @param int $padding Padding length
+     */
+    public function set_padding($padding) {
+        $this->padding = $padding;
     }
 
     /**
@@ -86,12 +122,12 @@ class Shorty {
     public function encode($n) {
         $k = 0;
 
-        if (!empty($this->salt)) {
-            $k = self::get_salt_num($n, $this->salt, $this->padding);
+        if ($this->padding > 0 && !empty($this->salt)) {
+            $k = self::get_seed($n, $this->salt, $this->padding);
             $n = (int)($k.$n);
         }
 
-        return $this->num_to_alpha($n, $this->chars);
+        return self::num_to_alpha($n, $this->chars);
     }
 
     /**
@@ -101,7 +137,7 @@ class Shorty {
      * @return int Decoded number
      */
     public function decode($s) {
-        $n = $this->alpha_to_num($s, $this->chars);
+        $n = self::alpha_to_num($s, $this->chars);
 
         return (!empty($this->salt)) ? substr($n, $this->padding) : $n;
     }
@@ -114,7 +150,7 @@ class Shorty {
      * @param int $padding Padding length
      * @return int Number for padding
      */
-    public static function get_salt_num($n, $salt, $padding) {
+    public static function get_seed($n, $salt, $padding) {
         $hash = md5($n.$salt);
         $dec = hexdec(substr($hash, 0, $padding));
         $num = $dec % pow(10, $padding);
@@ -328,7 +364,7 @@ class Shorty {
         // Lookup by id
         else {
             if (preg_match('/^([a-zA-Z0-9]+)$/', $q, $matches)) {
-                $id = $this->decode($matches[1]);
+                $id = self::decode($matches[1]);
 
                 $result = $this->fetch($id);
 

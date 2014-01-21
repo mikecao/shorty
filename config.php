@@ -19,4 +19,13 @@ $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 // $chars = 'zFr7ALOJnGRxtKSs0oQT5NeZjdI1iX8DM2lHaCVyg4mUPp63BkEubc9qWfhwYv';
 // $chars = 'u7oIws3pVWZMQjA4XhNtyvglkEer1C2J5YdT6zLiFm0ObPc8S9KaDHqRBnfUGx';
 // $chars = 'gZ6hdO59XTJmUP31YMG7FvQyqjlKkf8zwitx0AcupDVs2RWCIBaNreob4nLHES';
+
+// If you want your generated URLs to even harder to guess, you can set
+// the salt value below to any non empty value. This is especially useful for
+// encoding consecutive numbers.
+$salt = '';
+
+// The padding length to use when the salt value is configured above.
+// The default value is 3.
+$padding = 3;
 ?>
