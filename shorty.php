@@ -332,7 +332,7 @@ class Shorty {
                     $url = $this->hostname.'/'.$this->encode($id);
                 }
                 else {
-                    $url = $this->hostname.'/'.$this->decode($result['id']);
+                    $url = $this->hostname.'/'.$this->encode($result['id']);
                 }
 
                 // Display the shortened url
