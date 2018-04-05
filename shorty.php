@@ -311,7 +311,11 @@ class Shorty {
      * Starts the program.
      */
     public function run() {
-	$q = str_replace('/', '', $_GET['q']);
+        $q = str_replace('/', '', $_GET['q']);
+        if (empty($q)) {
+          $this->not_found();
+          return;
+        }
 
         $url = '';
         if (isset($_GET['url'])) {
