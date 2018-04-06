@@ -312,10 +312,6 @@ class Shorty {
      */
     public function run() {
         $q = str_replace('/', '', $_GET['q']);
-        if (empty($q)) {
-          $this->not_found();
-          return;
-        }
 
         $url = '';
         if (isset($_GET['url'])) {
@@ -375,6 +371,11 @@ class Shorty {
         }
         // Lookup by id
         else {
+            if (empty($q)) {
+              $this->not_found();
+              return;
+            }
+
             if (preg_match('/^([a-zA-Z0-9]+)$/', $q, $matches)) {
                 $id = self::decode($matches[1]);
 
