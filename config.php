@@ -28,4 +28,7 @@ $salt = '';
 // The padding length to use when the salt value is configured above.
 // The default value is 3.
 $padding = 3;
+
+//Set timezone
+date_default_timezone_set('Asia/Dhaka');
 ?>
