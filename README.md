@@ -10,13 +10,6 @@ Shorty is a simple URL shortener for PHP.
 
 3\. Configure your webserver.
 
-For **Apache**, edit your `.htaccess` file with the following:
-
-    RewriteEngine On
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php?q=$1 [QSA,L]
-
 For **Nginx**, add the following to your server declaration:
 
     server {
