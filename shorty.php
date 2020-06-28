@@ -261,6 +261,16 @@ class Shorty {
             'UPDATE urls SET hits = hits + 1, accessed = ? WHERE id = ?'
         );
         $statement->execute(array($datetime, $id));
+
+        include 'src/VisitorTracking.php';
+
+        $visitor = new VisitorTracking();
+        $browser = $visitor->browser;
+
+         $statement = $this->connection->prepare(
+            'INSERT INTO hit_detail (url_id, accessed, browser_name, browser_version, os, ip) VALUES (?,?,?,?,?,?)'
+        );
+        $statement->execute(array($id, $datetime, $browser->name, $browser->version, $browser->OS, $visitor->ip));
     }
 
     /**
