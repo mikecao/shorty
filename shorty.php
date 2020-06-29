@@ -321,7 +321,7 @@ class Shorty {
      * Starts the program.
      */
     public function run() {
-        $q = str_replace('/', '', $_GET['q']);
+
 
         $url = '';
         if (isset($_GET['url'])) {
@@ -380,7 +380,8 @@ class Shorty {
             }
         }
         // Lookup by id
-        else {
+        elseif (isset($_GET['q'])) {
+            $q = str_replace('/', '', $_GET['q']);
             if (empty($q)) {
               $this->not_found();
               return;
@@ -400,6 +401,10 @@ class Shorty {
                     $this->not_found();
                 }
             }
+        }
+        //Show form to create the short URL
+        else{
+            include_once 'create-new.php';
         }
     }
 }
