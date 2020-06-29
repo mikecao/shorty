@@ -372,7 +372,8 @@ class Shorty {
                         )));
 
                     default:
-                        exit('<a href="'.$url.'">'.$url.'</a>');
+                        include_once './result.php';
+//                        exit('<a href="'.$url.'">'.$url.'</a>');
                 }
             }
             else {
