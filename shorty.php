@@ -261,6 +261,16 @@ class Shorty {
             'UPDATE urls SET hits = hits + 1, accessed = ? WHERE id = ?'
         );
         $statement->execute(array($datetime, $id));
+
+        include 'src/VisitorTracking.php';
+
+        $visitor = new VisitorTracking();
+        $browser = $visitor->browser;
+
+         $statement = $this->connection->prepare(
+            'INSERT INTO hit_detail (url_id, accessed, browser_name, browser_version, os, ip) VALUES (?,?,?,?,?,?)'
+        );
+        $statement->execute(array($id, $datetime, $browser->name, $browser->version, $browser->OS, $visitor->ip));
     }
 
     /**
@@ -311,7 +321,7 @@ class Shorty {
      * Starts the program.
      */
     public function run() {
-        $q = str_replace('/', '', $_GET['q']);
+
 
         $url = '';
         if (isset($_GET['url'])) {
@@ -362,7 +372,8 @@ class Shorty {
                         )));
 
                     default:
-                        exit('<a href="'.$url.'">'.$url.'</a>');
+                        include_once './result.php';
+//                        exit('<a href="'.$url.'">'.$url.'</a>');
                 }
             }
             else {
@@ -370,7 +381,8 @@ class Shorty {
             }
         }
         // Lookup by id
-        else {
+        elseif (isset($_GET['q'])) {
+            $q = str_replace('/', '', $_GET['q']);
             if (empty($q)) {
               $this->not_found();
               return;
@@ -390,6 +402,10 @@ class Shorty {
                     $this->not_found();
                 }
             }
+        }
+        //Show form to create the short URL
+        else{
+            include_once 'create-new.php';
         }
     }
 }

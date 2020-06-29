@@ -1,9 +1,10 @@
 <?php
 // Hostname for your URL shortener
-$hostname = 'http://example.com';
+//$hostname = 'https://shorty.techtook.xyz';
+$hostname = 'http://shorty.loc';
 
 // PDO connection to the database
-$connection = new PDO('mysql:dbname=shorty;host=localhost', 'user', 'password');
+$connection = new PDO('mysql:dbname=shorty;host=localhost', 'nahid', 'j');
 
 // Choose your character set (default)
 $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -28,4 +29,7 @@ $salt = '';
 // The padding length to use when the salt value is configured above.
 // The default value is 3.
 $padding = 3;
+
+//Set timezone
+date_default_timezone_set('Asia/Dhaka');
 ?>
