@@ -329,7 +329,14 @@ class Shorty {
                 $this->error('Not allowed.');
             }
 
-            if (preg_match('/^http[s]?\:\/\/[\w]+/', $url)) {
+            // Automatically adds http:// 
+            if (!preg_match('/^http(s)?:\/\//', $url)) {
+                $url = "http://$url";
+            }
+
+            //if (preg_match('/^http[s]?\:\/\/[\w]+/', $url)) {
+            //use recommended filter validate url
+            if(filter_var($url, FILTER_VALIDATE_URL)) {
                 $result = $this->find($url);
 
                 // Not found, so save it
