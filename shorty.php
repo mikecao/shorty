@@ -373,7 +373,7 @@ class Shorty {
                 }
             }
             else {
-                //$this->error('Bad input.');
+                $this->error('Bad input.');
             }
         }
         // Lookup by id
